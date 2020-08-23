@@ -74,6 +74,12 @@ module XCResult
       end
     end
 
+    def get_action_test_summary_identifiable_object(id: nil, parent: nil)
+      raw = get_result_bundle_json(id:id)
+      data = JSON.parse(raw)
+      ActionTestSummaryIdentifiableObject.create(data,parent)
+    end
+
     private
 
     def get_result_bundle_json(id: nil)
