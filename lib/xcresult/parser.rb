@@ -67,11 +67,12 @@ module XCResult
       # Exports all xcovarchive directories from the archive references
       ids.each_with_index.map do |id, i|
         output_path = File.join(destination, "action_#{i}.xccovarchive")
-        cmd = xcresulttool_command("export", "--path #{path} --id '#{id}' --output-path #{output_path} --type directory")
-        execute_cmd(cmd)
-
-        output_path
+        export(id: id, output_path: output_path, type: 'directory')
       end
+    end
+
+    def export_file(id:, output_path:)
+      export(id: id, output_path: output_path, type: 'file')
     end
 
     def get_action_test_summary_identifiable_object(id: nil, parent: nil)
@@ -81,6 +82,12 @@ module XCResult
     end
 
     private
+
+    def export(id:, output_path:, type:)
+      cmd = xcresulttool_command("export", "--path #{path} --id '#{id}' --output-path #{output_path} --type #{type}")
+      execute_cmd(cmd)
+      output_path
+    end
 
     def get_result_bundle_json(id: nil)
       cmd = xcresulttool_command("get", "--format json --path #{path}")
